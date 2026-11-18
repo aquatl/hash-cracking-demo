@@ -1,8 +1,8 @@
 ## 1. Thông tin sinh viên
 
-Họ tên: Lê Anh Quang
-Mã sinh viên: 25021951
-Lớp: 2627I_UET.CS1058_9
+Họ tên: Lê Anh Quang  
+Mã sinh viên: 25021951  
+Lớp: 2627I_UET.CS1058_9  
 
 ## 2. Mục tiêu của project
 
