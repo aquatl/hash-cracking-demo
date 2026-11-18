@@ -98,14 +98,14 @@ Ký hiệu dùng trong phần này:
 <details>
 <summary><b>Mô phỏng 1 & 2: Brute-force + bảng băm tính sẵn, không salt</b> (<code>BruteForceAttacker</code>)</summary>
 
-- *Cách làm*: băm TOÀN BỘ `K` chuỗi trong không gian mật khẩu một lần, lưu vào `HashMap<hash, chuỗi>`. Với mỗi người dùng, tra bảng bằng hash của họ — O(1) trung bình.
+- *Cách làm*: băm toàn bộ `K` chuỗi trong không gian mật khẩu một lần, lưu vào `HashMap<hash, chuỗi>`. Với mỗi người dùng, tra bảng bằng hash của họ — O(1) trung bình.
 - *Độ phức tạp*: xây bảng tốn O(K) lần băm, mỗi lần tra O(1), tổng O(K + U). Bộ nhớ O(K) (phải lưu `K` chuỗi và hash).
-- *Ý nghĩa*: chi phí chỉ tốn một lần rồi dùng lại cho mọi người dùng. Mô phỏng 1 (SHA-1) và mô phỏng 2 (SHA-256) dùng chung một lớp code, chỉ khác hàm băm truyền vào, để chứng minh: sử dụng các thuật toán không tốt cho mục đích và implement sai cách (không salt) cực kì có hại.
+- *Ý nghĩa*: chi phí kẻ tấn công chỉ tốn một lần rồi dùng lại cho mọi người dùng. Mô phỏng 1 (SHA-1) và mô phỏng 2 (SHA-256) chứng minh: sử dụng các thuật toán không tốt cho mục đích và implement sai cách (không salt) cực kì có hại.
 
 </details>
 
 <details>
-<summary><b>Mô phỏng 3: Brute-force riêng cho từng người, có salt</b> (<code>SaltedBruteForceAttacker</code>) — làm hỏng việc dùng chung bảng tính trước</summary>
+<summary><b>Mô phỏng 3: Brute-force riêng cho từng người, có salt</b> (<code>SaltedBruteForceAttacker</code>) — ngăn chặn việc dùng chung bảng tính trước</summary>
 
 - *Cách làm*: hash của mỗi người giờ là `sha256(salt_riêng + mật khẩu)`. Bảng ở mô phỏng 1/2 vô dụng vì cùng một chuỗi thử cho ra hash khác nhau ở mỗi người. Chương trình phải brute-force lại toàn không gian mật khẩu cho mỗi người dùng (dừng sớm nếu tìm thấy).
 - *Độ phức tạp*: tổng O(U·K) trường hợp xấu nhất. Bộ nhớ O(1) — không lưu bảng nào, chỉ so khớp trực tiếp.
@@ -118,7 +118,7 @@ Ký hiệu dùng trong phần này:
 
 - *Cách làm*: mỗi lần băm lặp `k` vòng (HMAC-SHA256), vẫn có salt, vẫn là brute-force từng người.
 - *Độ phức tạp*: tổng O(U·K·k). Về lý thuyết (ký hiệu O) chỉ thêm một thừa số `k`, nhưng `k` lên tới hàng trăm nghìn nên trên thực tế khác biệt cực lớn.
-- *Ý nghĩa*: ở mô phỏng 4, chạy THẬT PBKDF2 trên một mẫu nhỏ (vài người dùng × vài chuỗi trong không gian mật khẩu) để đo số hash mỗi giây thật của máy, rồi tính `thời gian ≈ (U × K) / số hash mỗi giây`. Chương trình không chạy hết vì sẽ mất nhiều ngày đến hàng năm (maybe) => thuật toán và salt có độ an toàn cao.
+- *Ý nghĩa*: ở mô phỏng 4, chạy thử nghiệm PBKDF2 trên một mẫu nhỏ (vài người dùng × vài chuỗi trong không gian mật khẩu) để đo số hash mỗi giây thật của máy, rồi tính `thời gian ≈ (U × K) / số hash mỗi giây`. Chương trình không chạy hết không gian thử vì sẽ mất nhiều ngày từ đó chứng minh được thuật toán này và salt có độ an toàn cao.
 
 </details>
 
@@ -136,12 +136,11 @@ Tóm tắt:
 Đây là mô phỏng được đơn giản hóa so với thực tiễn để demo chạy được trong vài giây trên laptop thường. Các điểm đơn giản hóa:
 
 - **Không gian mật khẩu brute-force nhỏ.** Mặc định chỉ gồm chữ thường + số (36 ký tự) và độ dài tối đa 3 ký tự (`K` ≈ 48.000 khả năng). Mật khẩu thật thường dài 8+ ký tự với bảng chữ cái lớn (hoa, thường, số, ký tự đặc biệt), khiến `K` lớn hơn demo này rất nhiều lần.
-- **Số người dùng nhỏ.** Mặc định 300 (có thể chỉnh bằng `--users`). Rò rỉ thật thì hàng triệu.
+- **Số người dùng nhỏ.** Mặc định 300 (có thể chỉnh bằng `--users`). Rò rỉ thực tế lên tới hàng triệu.
 - **Giả định 90% người dùng có mật khẩu trong không gian brute-force, 10% nằm ngoài.** Thực tế có một số người nhận thức được nguy cơ, sử dụng mật khẩu rất dài và an toàn. Ta cho số đó chiếm 10%.
 - **Chạy trên một CPU, không có GPU.** Thực tế GPU được ứng dụng để tăng tốc.  
-- **Mô phỏng 4 không brute-force hết, chỉ đo mẫu nhỏ rồi ngoại suy tuyến tính.**
 
-Tóm lại, demo không phản ánh tốc độ hay tỉ lệ bẻ khóa thực tiễn, chỉ dùng để so sánh đánh giá.
+Tóm lại, demo không phản ánh tốc độ hay tỉ lệ bẻ khóa thực tiễn, mục đích chính là để so sánh đánh giá.
 
 ## 7. Cách chạy
 
@@ -156,8 +155,8 @@ javac -encoding UTF-8 -d out $(find src/main/java -name "*.java")
 # chạy với giá trị mặc định (300 người dùng, charset 36 ký tự, độ dài tối đa 3)
 java -cp out com.acmebreach.Main
 
-# hoặc tự chỉnh
-java -cp out com.acmebreach.Main --users 100 --max-length 2 --fast
+# hoặc tự chỉnh, bỏ # nếu dùng
+# java -cp out com.acmebreach.Main --users 100 --max-length 2 --fast
 ```
 
 Powershell:
@@ -171,8 +170,8 @@ javac -encoding UTF-8 -d out $files
 # Chạy chương trình với giá trị mặc định
 java -cp out com.acmebreach.Main
 
-# Hoặc tự chỉnh tham số
-java -cp out com.acmebreach.Main --users 100 --max-length 2 --fast
+# Hoặc tự chỉnh tham số, bỏ # nếu dùng
+# java -cp out com.acmebreach.Main --users 100 --max-length 2 --fast
 ```
 
 Nếu Powershell cho ra chữ linh tinh, thì do nó không hỗ trợ tiếng việt. Chuyển sang hỗ trợ tiếng việt trong phiên hiện tại bằng cách:
@@ -190,23 +189,23 @@ Các tùy chọn:
 | `--users N` | số người dùng giả trong vụ "rò rỉ" | 300 |
 | `--max-length N` | độ dài tối đa của không gian brute-force | 3 |
 | `--charset STR` | bộ ký tự brute-force | `abcdefghijklmnopqrstuvwxyz0123456789` (36 ký tự) |
-| `--secure-fraction D` | tỉ lệ người dùng có mật khẩu NẰM NGOÀI không gian brute-force | 0.10 |
+| `--secure-fraction D` | tỉ lệ người dùng có mật khẩu ngoài không gian brute-force | 0.10 |
 | `--fast` | bỏ các khoảng dừng giữa các dòng | tắt |
 | `--report PATH` | nơi ghi báo cáo sự cố dạng markdown | `INCIDENT_REPORT.md` |
 
-**Lưu ý về hiệu năng:** kích thước không gian mật khẩu `K = C¹+C²+...+C^maxLength` tăng theo hàm MŨ. Tăng `--max-length` hoặc dùng `--charset` lớn hơn sẽ khiến demo chạy rất lâu, đặc biệt là mô phỏng 3 (chi phí O(U·K)). Chương trình sẽ từ chối chạy và báo lỗi nếu `K` vượt quá 50 triệu. Với giá trị mặc định, một lần chạy đầy đủ ( cả mô phỏng 4 với PBKDF2 thật trên mẫu nhỏ) mất khoảng 10 giây.
+**Lưu ý về hiệu năng:** kích thước không gian mật khẩu `K = C¹+C²+...+C^maxLength` tăng theo hàm mũ. Tăng `--max-length` hoặc dùng `--charset` lớn hơn sẽ khiến demo chạy rất lâu, đặc biệt là mô phỏng 3 (chi phí O(U·K)). Chương trình sẽ từ chối chạy và báo lại nếu `K` vượt quá 50 triệu. Với giá trị mặc định, một lần chạy đầy đủ  mất khoảng 10 giây.
 
-Chạy xong, hãy mở `INCIDENT_REPORT.md` — đó là một bản báo cáo sự cố nhỏ với bảng kết quả và phần "bài học rút ra", viết cho vui nhưng phần số liệu trong đó là thật của lần chạy đó.
+Chạy xong, mở `INCIDENT_REPORT.md` — bản báo cáo sự cố nhỏ với bảng kết quả, số liệu trong đó được đo đạc thật của lần chạy đó.
 
 ## 8. Cấu trúc dự án
 
 ```
 src/main/java/com/acmebreach/
-├── Main.java                          điểm bắt đầu, chạy cả bốn mô phỏng
+├── Main.java                          bắt đầu, chạy cả bốn mô phỏng
 ├── hashing/HashUtil.java              SHA-1, SHA-256, PBKDF2 + hàm hỗ trợ
 ├── bruteforce/Keyspace.java           sinh và đếm không gian mật khẩu brute-force
 ├── data/
-│   ├── User.java                      một dòng người dùng giả
+│   ├── User.java                      một người dùng giả
 │   └── UserDatabase.java              tạo bảng người dùng giả 
 ├── attack/
 │   ├── BruteForceAttacker.java        mô phỏng 1 & 2 (không salt, bảng tính sẵn dùng chung)
@@ -215,5 +214,5 @@ src/main/java/com/acmebreach/
 ├── report/
 │   ├── Format.java                    định dạng thời gian/dung lượng/phần trăm
 │   └── IncidentReport.java            ghi báo cáo markdown
-└── story/Narrator.java                    in ra màn hình
+└── story/Narrator.java                in ra màn hình
 ```
