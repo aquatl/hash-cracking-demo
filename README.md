@@ -10,7 +10,7 @@ Lớp: 2627I_UET.CS1058_9
 
 **Câu hỏi**: Kẻ tấn công mất bao lâu để hoàn thành bẻ khóa mật khẩu của tất cả mọi người từ hash?
 
-Dự án Java này ứng dụng phương pháp **nghiên cứu độ phức tạp thời gian, không gian bộ nhớ** của DSA để đánh giá, so sánh mức độ an toàn của bốn cách băm mật khẩu khác nhau đồng thời cho thấy sự khác biệt mà thuật toán băm tốt có thể tạo ra bằng cách mô phỏng một cuộc tấn công **brute-force thuần túy** vào từng cách băm.
+Dự án Java này ứng dụng phương pháp **nghiên cứu độ phức tạp thời gian, không gian bộ nhớ** của DSA để đánh giá, so sánh mức độ an toàn của bốn cách băm mật khẩu khác nhau bằng cách mô phỏng một cuộc tấn công **brute-force thuần túy** vào từng cách băm. Đồng thời cho thấy tầm quan trọng của một thuật toán tốt (ở đây là thuật toán băm).
 
 **Thực tế có thật:** [LinkedIn 2012](https://techcrunch.com/2016/05/18/117-million-linkedin-emails-and-passwords-from-a-2012-hack-just-got-posted-online) — mật khẩu của 117 triệu tài khoản chỉ được băm SHA-1 không salt (giống mô phỏng 1), nên hàng trăm nghìn mật khẩu bị bẻ trong nháy mắt.
 
