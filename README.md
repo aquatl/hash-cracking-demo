@@ -55,7 +55,7 @@ Là chuỗi ngẫu nhiên, riêng cho từng user, được ghép vào mật kh�
 <details>
 <summary><b>Hàm băm chậm (PBKDF2, bcrypt, scrypt, Argon2)</b></summary>
 
-Hàm băm được thiết kế để tốn thời gian. VD: PBKDF2 lặp hàm băm hàng trăm nghìn lần cho mỗi mật khẩu. User thật chỉ đợi thêm một chút khi đăng nhập, nhưng kẻ tấn công phải chịu chi phí đó cho mỗi lần đoán nhân với toàn bộ không gian mật khẩu.
+Là hàm băm được thiết kế để tốn thời gian. VD: PBKDF2 lặp hàm băm hàng trăm nghìn lần cho mỗi mật khẩu. User thật chỉ đợi thêm một chút khi đăng nhập, nhưng kẻ tấn công phải chịu chi phí đó cho mỗi lần đoán nhân với toàn bộ không gian mật khẩu.
 
 </details>
 
