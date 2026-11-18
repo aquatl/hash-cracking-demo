@@ -1,0 +1,7 @@
+out/
+target/
+*.class
+INCIDENT_REPORT.md
+.idea/
+*.iml
+.vscode/
