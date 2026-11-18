@@ -117,7 +117,7 @@ public class Main {
                 r1.cracked.size() + " / " + numUsers + " (" + Format.pct(r1.cracked.size(), numUsers) + ")",
                 Format.nanos(r1.buildMapNanos + r1.crackNanos),
                 Format.bytes(tableMemory) + " (bảng O(K))",
-                "Thảm họa \u2014 tốn công một lần, bẻ được mọi người dùng trong không gian");
+                "Tồi tệ. Có hàng trăm nghìn mật khẩu cũng crack trong nháy mắt");
 
 
         n.scene("Mô phỏng 2 SHA-256, không salt");
@@ -137,7 +137,7 @@ public class Main {
                 r2.cracked.size() + " / " + numUsers + " (" + Format.pct(r2.cracked.size(), numUsers) + ")",
                 Format.nanos(r2.buildMapNanos + r2.crackNanos),
                 Format.bytes(tableMemory) + " (bảng O(K))",
-                "Vẫn là thảm họa \u2014 đổi hàm băm không giúp được gì nếu thiếu salt");
+                "Vẫn giống mô phỏng 1");
 
         n.scene("Mô phỏng 3 AcmeCorp thêm salt");
 
@@ -157,7 +157,7 @@ public class Main {
                 r3.cracked.size() + " / " + numUsers + " (" + Format.pct(r3.cracked.size(), numUsers) + ")",
                 Format.nanos(r3.crackNanos),
                 "không đáng kể (không lưu bảng nào, O(1))",
-                "Mật khẩu trong không gian brute-force vẫn bị bẻ; chi phí tăng theo numUsers x K");
+                "Mật khẩu trong không gian brute-force vẫn bị bẻ; chi phí tăng theo numUsers x K, không đủ lớn");
 
 
         n.scene("Mô phỏng 4: Cuối cùng AcmeCorp cũng đọc OWASP Cheat Sheet");
